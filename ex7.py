@@ -5,8 +5,10 @@ def determinerResultatElectionsLegislatives():
     tour des elections legislatives de Guignolerie Septentrionale
     """
     
+    RESULTAT_MIN_TOUR2 = 12.5
+    
     scoresCandidats = []
-    candidatQualifieSecondTour = {}
+    res = ""
     
     for i in range(4):
         while True:
@@ -23,26 +25,19 @@ def determinerResultatElectionsLegislatives():
 
     if (scoresCandidats[0] > 50): # Si élu premier tour
         res = "Elu"
+    elif max(scoresCandidats) > 50: # Si battu au premier tour
+        res = "Battu"
+    elif (scoresCandidats[0] > RESULTAT_MIN_TOUR2): # Si Eligible second tour
+        res = "Favorable"
+        idx = 1
+        while idx < len(scoresCandidats) and res == "Favorable":
+            if (scoresCandidats[idx] > RESULTAT_MIN_TOUR2) and (scoresCandidats[idx] > scoresCandidats[0]):
+                res = "Défavorable"  
+            idx = idx + 1       
     else:
-        for i in range(3):
-            if (scoresCandidats[i+1] > 50): # Si battu premier tour
-                res = "Battu"
-            else:
-                if (scoresCandidats[0] < 12.5): # Si Eligible second tour
-                    candidatQualifieSecondTour["Candidat1"] = scoresCandidats[0]
-                    for i in range(3):
-                        if (scoresCandidats[i+1] < 12.5):
-                            candidatQualifieSecondTour["Candidat{}".format(i+1)] = scoresCandidats[i+1]
-                    # for i in range(len(candidatQualifieSecondTour)):
-                    print(candidatQualifieSecondTour)
-                    
-                else:
-                    res = "Battu"
+        res = "Battu"
         
     return res
-                    
-             
-         
 
 res = determinerResultatElectionsLegislatives()
 print("Le verdicte des elections pour le candidat 1 est : {}".format(res))
